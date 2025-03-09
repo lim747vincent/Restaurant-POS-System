@@ -1,0 +1,17 @@
+CREATE TABLE Order_Form(
+    order_form_id NUMBER(4) NOT NULL,
+    table_number NUMBER(4),
+    order_date DATE NOT NULL,
+    order_time VARCHAR(10) NOT NULL, 
+    number_customers NUMBER(4),
+    order_form_status VARCHAR(10) NOT NULL,    
+    consumption_method_id NUMBER(4) NOT NULL,
+    staff_id NUMBER(4) NOT NULL,
+    customer_id NUMBER(4) NOT NULL,
+    payment_id NUMBER(4),
+    PRIMARY KEY(order_form_id),
+    FOREIGN KEY(consumption_method_id) REFERENCES Consumption_Method(consumption_method_id) ,
+    FOREIGN KEY(staff_id) REFERENCES Staff(staff_id) ,
+    FOREIGN KEY(customer_id) REFERENCES Customer(customer_id),
+    FOREIGN KEY(payment_id) REFERENCES Payment(payment_id)
+);

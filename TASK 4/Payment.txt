@@ -1,0 +1,11 @@
+CREATE TABLE Payment(
+    payment_id NUMBER(4) NOT NULL, 
+    payment_method_id NUMBER(4) NOT NULL,
+    discount_code_id NUMBER(4),
+    tax_id NUMBER(4) NOT NULL,
+    payment_amount NUMBER(10,2) NOT NULL,
+    PRIMARY KEY(payment_id),
+    FOREIGN KEY(payment_method_id) REFERENCES Payment_Method(payment_method_id) ,
+    FOREIGN KEY(discount_code_id) REFERENCES Discount_Code(discount_code_id) ,
+    FOREIGN KEY(tax_id) REFERENCES Tax(tax_id)
+);

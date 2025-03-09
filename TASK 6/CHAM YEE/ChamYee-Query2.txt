@@ -1,0 +1,75 @@
+SET linesize 200
+SET pagesize 200;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+ACCEPT input_start_date DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT input_end_date DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+
+COLUMN "Menu Item" FORMAT A40 TRUNCATE HEADING "Menu Item"
+COLUMN "Consumption Method" FORMAT A35 TRUNCATE HEADING "Consumption Method"
+COLUMN "Number of Orders" FORMAT 999,999 TRUNCATE HEADING "Number of Orders"
+COLUMN "Total Sales Amount (RM)" FORMAT 99,999,999.99 TRUNCATE HEADING "Total Sales Amount (RM)"
+
+TTITLE 'Top-Selling Consumption Method for Each Menu Item Report ' &input_start_date' to '&input_end_date' ' SKIP 2
+COMPUTE SUM LABEL 'Total : ' OF "Total Sales Amount (RM)" ON REPORT;
+BREAK ON REPORT;
+
+WITH MaxSales AS (
+    SELECT
+        mi.menu_item_id AS item_id,
+        MAX(p.payment_amount) AS max_sales
+    FROM
+        Menu_Item mi
+    JOIN
+        Order_Item oi ON mi.menu_item_id = oi.menu_item_id
+    JOIN
+        Order_Form o ON oi.order_form_id = o.order_form_id
+    JOIN
+        Payment p ON o.payment_id = p.payment_id
+    WHERE
+        o.order_date BETWEEN '&input_start_date' AND '&input_end_date'
+        AND o.order_form_status = 'successful'
+    GROUP BY
+        mi.menu_item_id
+)
+SELECT
+    "Menu Item",
+    "Consumption Method",
+    "Number of Orders",
+    "Total Sales Amount (RM)"
+FROM (
+    SELECT
+        mi.menu_Item_name AS "Menu Item",
+        cm.consumption_method_name AS "Consumption Method",
+        COUNT(o.order_form_id) AS "Number of Orders",
+        SUM(p.payment_amount) AS "Total Sales Amount (RM)",
+        ROW_NUMBER() OVER (PARTITION BY mi.menu_Item_name ORDER BY SUM(p.payment_amount) DESC) AS row_num
+    FROM
+        Menu_Item mi
+    JOIN
+        Order_Item oi ON mi.menu_item_id = oi.menu_item_id
+    JOIN
+        Order_Form o ON oi.order_form_id = o.order_form_id
+    JOIN
+        Consumption_Method cm ON o.consumption_method_id = cm.consumption_method_id
+    JOIN
+        MaxSales ms ON mi.menu_item_id = ms.item_id
+    LEFT JOIN
+        Payment p ON o.payment_id = p.payment_id
+    WHERE
+        o.order_date BETWEEN '&input_start_date' AND '&input_end_date'
+    AND 
+        o.order_form_status = 'successful'
+    GROUP BY
+        mi.menu_Item_name, cm.consumption_method_name, ms.max_sales
+)
+WHERE
+    row_num = 1
+ORDER BY
+    "Total Sales Amount (RM)" DESC, "Menu Item" ASC, "Consumption Method" ;
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF

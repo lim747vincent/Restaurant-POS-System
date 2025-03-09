@@ -1,0 +1,10 @@
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('1', 'Bank Transfers', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('2', 'Debit Cards', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('3', 'Credit Cards', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('4', 'Touch n go', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('5', 'Cash', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('6', 'Grab Pay', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('7', 'Shopee Pay', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('8', 'Boost', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('9', 'Paypal', '1');
+INSERT INTO Payment_Method (payment_method_id, payment_method_name, payment_method_available) VALUES ('10', 'Alipay', '1');

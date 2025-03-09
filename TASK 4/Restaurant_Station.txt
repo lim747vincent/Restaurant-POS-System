@@ -1,0 +1,7 @@
+CREATE TABLE Restaurant_Station(
+    restaurant_station_id NUMBER(4) NOT NULL,
+    restaurant_station_name VARCHAR(20) NOT NULL UNIQUE,
+    max_number_of_staff NUMBER(2) NOT NULL,
+    PRIMARY KEY(restaurant_station_id),
+    CONSTRAINT CHK_number_of_staff CHECK (max_number_of_staff >= 0)
+);

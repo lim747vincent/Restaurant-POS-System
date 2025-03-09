@@ -1,0 +1,8 @@
+CREATE TABLE Loyalty_Level(
+    loyalty_level_id NUMBER(4) NOT NULL,
+    loyalty_level_name VARCHAR(20) NOT NULL UNIQUE,
+    cost_membership NUMBER(10,2) NOT NULL,
+    loyalty_level_discount_rate NUMBER(10,2) NOT NULL,
+    PRIMARY KEY(loyalty_level_id),
+    CONSTRAINT CHK_cost_membership CHECK (cost_membership >= 500)
+);

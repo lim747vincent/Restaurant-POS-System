@@ -1,0 +1,50 @@
+SET linesize 200
+SET pagesize 35;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+ACCEPT input_start_date DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT input_end_date DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+
+COLUMN "Menu Category" FORMAT A30 TRUNCATE HEADING "Menu Category"
+COLUMN "Menu Item" FORMAT A40 TRUNCATE HEADING "Menu Item"
+COLUMN "Total Orders" FORMAT 99,999 TRUNCATE HEADING "Total Orders"
+
+TTITLE 'Popular Menu Items by Category Report  '&input_start_date' to '&input_end_date' ' SKIP 2
+COMPUTE SUM LABEL 'Total : ' OF "Total Orders" ON REPORT;
+BREAK ON REPORT;
+
+SELECT
+    "Menu Category",
+    "Menu Item",
+    "Total Orders"
+FROM(
+    SELECT
+        mc.menu_category_name AS "Menu Category",
+        mi.menu_item_name AS "Menu Item",
+        SUM(oi.order_item_quantity) AS "Total Orders",
+        RANK() OVER (PARTITION BY mc.menu_category_name ORDER BY SUM(oi.order_item_quantity) DESC) AS Rank
+    FROM
+        Menu_Category mc
+    JOIN
+        Menu_Item mi ON mc.menu_category_id = mi.menu_category_id
+    JOIN
+        Order_Item oi ON mi.menu_item_id = oi.menu_item_id
+    JOIN
+        Order_Form o ON oi.order_form_id = o.order_form_id
+    WHERE
+        o.order_date BETWEEN '&input_start_date' AND '&input_end_date'
+        AND o.order_form_status = 'successful'
+    GROUP BY
+        mc.menu_category_name, mi.menu_item_name
+)
+WHERE
+    Rank = 1
+ORDER BY
+    "Menu Category" ASC;
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF
+

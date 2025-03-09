@@ -1,0 +1,10 @@
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0001', 'dine-in');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0002', 'food-delivery');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0003', 'drive-thru');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0004', 'self-pick up(within 20 minutes)');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0005', 'self-pick up(within 1 hour)');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0006', 'self-pick up(within 2 hour)');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0007', 'self-pick up(within 3 hour)');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0008', 'takeaway(within 1 hour)');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0009', 'takeaway(within 2 hour)');
+INSERT INTO Consumption_Method (consumption_method_id, consumption_method_name) VALUES ('0010', 'takeaway(within 3 hour)');

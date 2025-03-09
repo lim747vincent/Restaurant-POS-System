@@ -1,0 +1,40 @@
+SET linesize 200
+SET pagesize 200
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+ACCEPT v_startDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT v_endDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+
+COLUMN"restaurant_station_id"FORMAT 999
+COLUMN"total_staff_count" FORMAT 999
+COLUMN"average_salary" FORMAT 999,999.99
+
+
+TTITLE 'Average Salary Of Staff in Each Restaurant Station Report  ' _DATE -
+RIGHT 'Page No: ' FORMAT 999 SQL.PNO SKIP 2
+BREAK ON REPORT;
+
+SELECT 
+    rs.restaurant_station_id,
+    COUNT(s.staff_id) AS total_staff_count,
+    AVG(s.staff_monthly_salary) AS average_salary
+FROM 
+    staff s
+JOIN 
+    restaurant_station rs ON s.restaurant_station_id = rs.restaurant_station_id
+WHERE 
+    s.staff_date_joined BETWEEN TO_DATE('&v_startDate', 'DD-MON-YYYY') AND TO_DATE('&v_endDate', 'DD-MON-YYYY')
+    AND (s.staff_date_resigned >= TO_DATE('&v_startDate', 'DD-MON-YYYY'))
+GROUP BY 
+    rs.restaurant_station_id
+ORDER BY 
+    rs.restaurant_station_id;
+
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF
+
+

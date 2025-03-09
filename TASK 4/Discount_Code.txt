@@ -1,0 +1,11 @@
+CREATE TABLE Discount_Code(
+    discount_code_id NUMBER(4) NOT NULL,
+    discount_code_name VARCHAR(20) NOT NULL,
+    discount_rate NUMBER(10,2) NOT NULL,
+    discount_code_quantity NUMBER(4) NOT NULL,
+    discount_code_start_date DATE NOT NULL,
+    discount_code_end_date DATE NOT NULL,
+    PRIMARY KEY(discount_code_id),
+    CONSTRAINT CHK_discount_rate CHECK (discount_rate >= 0),
+    CONSTRAINT CHK_discount_code_quantity CHECK (discount_code_quantity >= 0)
+);

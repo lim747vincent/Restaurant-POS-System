@@ -1,0 +1,10 @@
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0001', 'Sarawak Laksa');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0002', 'Chicken Rice Noodle');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0003', 'Kolo & Kampua Noodle');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0004', 'Zaocai Noodle');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0005', 'Hainanese Chicken Rice');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0006', 'Chee Cheong Fun');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0007', 'Snacks');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0008', 'Drink');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0009', 'Kolo & Kampua Value Set');
+INSERT INTO Menu_Category (menu_category_id, menu_category_name) VALUES ('0010', 'Sourdough Bread');

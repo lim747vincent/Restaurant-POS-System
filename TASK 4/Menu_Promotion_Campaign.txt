@@ -1,0 +1,13 @@
+CREATE TABLE Menu_Promotion_Campaign(
+    menu_promotion_campaign_id NUMBER(4) NOT NULL,
+    discount_rate NUMBER(10,2) NOT NULL,
+    campaign_start_date DATE NOT NULL,
+    campaign_end_date DATE NOT NULL,
+    campaign_description VARCHAR(20) NOT NULL,
+    menu_category_id NUMBER(4) NOT NULL,
+    consumption_method_id NUMBER(4) NOT NULL,
+    PRIMARY KEY(menu_promotion_campaign_id),
+    FOREIGN KEY(menu_category_id) REFERENCES Menu_Category(menu_category_id),
+    FOREIGN KEY(consumption_method_id) REFERENCES Consumption_Method(consumption_method_id),
+    CONSTRAINT CHK_promotion_discount_rate CHECK (discount_rate >= 0)
+);

@@ -1,0 +1,17 @@
+CREATE TABLE Staff(
+    staff_id NUMBER(4) NOT NULL,
+    staff_last_name VARCHAR(20) NOT NULL,
+    staff_first_name VARCHAR(20) NOT NULL,
+    staff_job_title VARCHAR(20) NOT NULL,
+    staff_email VARCHAR(40) NOT NULL UNIQUE,
+    staff_phone_number VARCHAR(15) NOT NULL UNIQUE,
+    staff_date_of_birth DATE NOT NULL,
+    staff_date_joined DATE NOT NULL,
+    staff_date_resigned DATE NOT NULL,
+    staff_monthly_salary NUMBER(10,2) NOT NULL,
+    restaurant_station_id NUMBER(4) NOT NULL,
+    PRIMARY KEY(staff_id),
+    FOREIGN KEY(restaurant_station_id) REFERENCES Restaurant_Station(restaurant_station_id),
+    CONSTRAINT CHK_staff_monthly_salary CHECK (staff_monthly_salary >= 0),
+    CONSTRAINT CHK_staff_email CHECK (REGEXP_LIKE(staff_email,'^[a-zA-Z]\w+@(\S+)$'))
+);

@@ -1,0 +1,8 @@
+CREATE TABLE Food_Delivery_Request (
+    food_delivery_request_id NUMBER(4) NOT NULL,
+    order_form_id NUMBER(4) NOT NULL,
+    company_id NUMBER(4) NOT NULL,
+    PRIMARY KEY(food_delivery_request_id),
+    FOREIGN KEY(order_form_id) REFERENCES Order_Form(order_form_id) ,
+    FOREIGN KEY(company_id) REFERENCES Food_Delivery_Company(company_id) 
+);

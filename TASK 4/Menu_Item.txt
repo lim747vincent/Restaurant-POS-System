@@ -1,0 +1,10 @@
+CREATE TABLE Menu_Item(
+    menu_item_id NUMBER(4) NOT NULL,
+    menu_item_name VARCHAR(40) NOT NULL,
+    menu_item_unit_price NUMBER(10,2) NOT NULL,
+    menu_item_available NUMBER(1) NOT NULL,
+    menu_category_id NUMBER(4) NOT NULL,
+    PRIMARY KEY(menu_item_id),
+    FOREIGN KEY(menu_category_id) REFERENCES Menu_Category(menu_category_id),
+    CONSTRAINT CHK_menu_item_unit_price CHECK (menu_item_unit_price >= 0)
+);

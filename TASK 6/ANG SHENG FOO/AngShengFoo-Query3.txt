@@ -1,0 +1,57 @@
+SET linesize 200
+SET pagesize 200;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+ACCEPT input_start_date DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT input_end_date DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+
+COLUMN "Menu Category" FORMAT A35 TRUNCATE HEADING "Menu Category"
+COLUMN "Total Orders" FORMAT 9999 TRUNCATE HEADING "Total Orders"
+COLUMN "Avg. Item Quantity per Order" FORMAT 999.99 TRUNCATE HEADING "Avg. Item Quantity per Order"
+COLUMN "Total Sales" FORMAT 999,999.99 TRUNCATE HEADING "Total Sales"
+COLUMN "Total Profit" FORMAT 999,999.99 TRUNCATE HEADING "Total Profit"
+COLUMN "Profit per Order" FORMAT 999,999.99 TRUNCATE HEADING "Profit per Order"
+
+TTITLE 'Menu Category Sales and Profit Summary' &input_start_date' to '&input_end_date' ' SKIP 2
+COMPUTE SUM LABEL 'Total : ' OF "Total Orders", "Total Sales", "Total Profit", "Profit per Order" ON REPORT;
+BREAK ON REPORT;
+
+SELECT
+    mc.menu_category_name AS "Menu Category",
+    COUNT(DISTINCT o.order_form_id) AS "Total Orders",
+    AVG(oi.order_item_quantity) AS "Avg. Item Quantity per Order",
+    SUM(oi.order_item_quantity * mi.menu_item_unit_price) AS "Total Sales",
+    SUM(oi.order_item_quantity * mi.menu_item_unit_price - mii.total_cost) AS "Total Profit",
+    SUM(oi.order_item_quantity * mi.menu_item_unit_price - mii.total_cost) / COUNT(DISTINCT o.order_form_id) AS "Profit per Order"
+FROM
+    Menu_Category mc
+JOIN
+    Menu_Item mi ON mc.menu_category_id = mi.menu_category_id
+JOIN
+    Order_Item oi ON mi.menu_item_id = oi.menu_item_id
+JOIN
+    Order_Form o ON oi.order_form_id = o.order_form_id
+LEFT JOIN (
+    SELECT
+        mi.menu_item_id,
+        SUM(i.ingredient_price) AS total_cost
+    FROM
+        Menu_Item_Ingredient_Record mii
+    JOIN
+        Ingredient i ON mii.ingredient_id = i.ingredient_id
+    JOIN
+        Menu_Item mi ON mii.menu_item_id = mi.menu_item_id
+    GROUP BY
+        mi.menu_item_id
+) mii ON mi.menu_item_id = mii.menu_item_id
+WHERE
+    o.order_date BETWEEN TO_DATE('&input_start_date', 'DD-MON-YYYY') AND TO_DATE('&input_end_date', 'DD-MON-YYYY')
+GROUP BY
+    mc.menu_category_name
+ORDER BY
+    mc.menu_category_name;
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF

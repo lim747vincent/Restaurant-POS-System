@@ -1,0 +1,6 @@
+CREATE TABLE Payment_Method(
+    payment_method_id NUMBER(4) NOT NULL,
+    payment_method_name VARCHAR(20) NOT NULL UNIQUE,
+    payment_method_available NUMBER(1) NOT NULL,
+    PRIMARY KEY(payment_method_id) 
+);

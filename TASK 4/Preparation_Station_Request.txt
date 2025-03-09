@@ -1,0 +1,10 @@
+CREATE TABLE Preparation_Station_Request(
+    preparation_station_request_id NUMBER(4) NOT NULL,
+    order_item_id NUMBER(4) NOT NULL,
+    restaurant_station_id NUMBER(4) NOT NULL,
+    menu_item_id NUMBER(4) NOT NULL,
+    order_form_id NUMBER(4) NOT NULL,
+    PRIMARY KEY(preparation_station_request_id),
+    FOREIGN KEY(order_item_id, menu_item_id, order_form_id) REFERENCES Order_Item(order_item_id, menu_item_id, order_form_id),
+    FOREIGN KEY(restaurant_station_id) REFERENCES Restaurant_Station(restaurant_station_id)
+);

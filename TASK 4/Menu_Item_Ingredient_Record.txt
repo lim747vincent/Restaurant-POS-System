@@ -1,0 +1,8 @@
+CREATE TABLE Menu_Item_Ingredient_Record(
+    menu_item_ingredient_record_id NUMBER(4) NOT NULL,
+    menu_item_id NUMBER(4) NOT NULL,
+    ingredient_id NUMBER(4) NOT NULL,
+    PRIMARY KEY(menu_item_ingredient_record_id, menu_item_id, ingredient_id),
+    FOREIGN KEY(menu_item_id) REFERENCES Menu_Item(menu_item_id),
+    FOREIGN KEY(ingredient_id) REFERENCES Ingredient(ingredient_id)
+);

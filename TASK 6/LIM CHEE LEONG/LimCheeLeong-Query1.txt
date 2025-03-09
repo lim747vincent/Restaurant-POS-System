@@ -1,0 +1,68 @@
+SET linesize 120
+SET pagesize 35
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+ACCEPT v_startDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT v_endDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+
+COL payment_method_id FORMAT 9999 TRUNCATE HEADING "ID"
+COL payment_method_name FORMAT A20 TRUNCATE HEADING "PAYMENT METHOD NAME"
+COL num_payments FORMAT 99990 TRUNCATE HEADING "NUMBER OF PAYMENTS"
+COL average_num_payments FORMAT 99990.99 TRUNCATE HEADING "AVERAGE NUMBER"
+COL PERFORMANCE_RATIO FORMAT 990.90 TRUNCATE HEADING "PERFORMANCE RATIO"
+COL popularity_status FORMAT A30 TRUNCATE HEADING "STATUS"
+
+
+TTITLE CENTER 'Payment Method Company Performance Report ' _DATE -
+RIGHT 'Page No: ' FORMAT 999 SQL.PNO SKIP 2
+COMPUTE SUM LABEL 'Total : ' OF "num_payments" ON REPORT;
+BREAK ON REPORT;
+
+
+WITH PaymentPopularity AS (
+    SELECT
+        pm.payment_method_id,
+        pm.payment_method_name,
+        COUNT(p.payment_id) AS num_payments
+    FROM
+        Payment_Method pm
+    LEFT JOIN
+        Payment p ON pm.payment_method_id = p.payment_method_id
+    JOIN
+        Order_Form off ON p.payment_id = off.payment_id
+    WHERE
+        off.order_form_status = 'successful'
+        AND off.order_date >= '1-JAN-2020'
+        AND off.order_date <= '31-DEC-2022'    
+    GROUP BY
+        pm.payment_method_id, pm.payment_method_name
+),
+AvgPopularity AS (
+    SELECT
+        AVG(num_payments) AS avg_num_payments
+    FROM
+        PaymentPopularity
+)
+SELECT
+    pp.payment_method_id,
+    pp.payment_method_name,
+    pp.num_payments,
+    ap.avg_num_payments AS average_num_payments,
+    (pp.num_payments / ap.avg_num_payments) AS PERFORMANCE_RATIO,
+    CASE
+        WHEN pp.num_payments > ap.avg_num_payments THEN 'Above Average'
+        WHEN pp.num_payments < ap.avg_num_payments THEN 'Below performance'
+        ELSE 'Normal'
+    END AS popularity_status
+FROM
+    PaymentPopularity pp
+CROSS JOIN
+    AvgPopularity ap
+ORDER BY
+    PERFORMANCE_RATIO DESC, pp.payment_method_id;
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF

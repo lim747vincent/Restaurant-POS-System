@@ -1,0 +1,6 @@
+CREATE TABLE Food_Delivery_Company (
+    company_id NUMBER(4) NOT NULL,
+    company_name VARCHAR(20) NOT NULL UNIQUE,
+    company_available NUMBER(1) NOT NULL,
+    PRIMARY KEY(company_id)
+ );

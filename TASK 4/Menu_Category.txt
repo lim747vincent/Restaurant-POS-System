@@ -1,0 +1,5 @@
+CREATE TABLE Menu_Category(
+    menu_category_id NUMBER(4) NOT NULL,
+    menu_category_name VARCHAR(30) NOT NULL UNIQUE,
+    PRIMARY KEY(menu_category_id)
+);

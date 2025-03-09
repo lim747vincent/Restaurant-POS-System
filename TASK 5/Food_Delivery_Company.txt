@@ -1,0 +1,10 @@
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('1', 'Foodpanda', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('2', 'GrabFood', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('3', 'EASI', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('4', 'AirAsia Food', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('5', 'GemSpot', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('6', 'LOLOL', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('7', 'ShopeeFood', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('8', 'Bungkusit', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('9', 'DeliverEat', '1');
+INSERT INTO Food_Delivery_Company (company_id, company_name, company_available) VALUES ('10', 'Beep Delivery', '1');

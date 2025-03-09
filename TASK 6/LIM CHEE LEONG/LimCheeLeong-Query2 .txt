@@ -1,0 +1,76 @@
+SET linesize 120
+SET pagesize 35
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+ACCEPT v_startDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT v_endDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+ACCEPT v_minPayment NUMBER FORMAT '9999.99' PROMPT 'Enter min total payment made for each customer (0-9999.99): '
+ACCEPT v_numberPurchase NUMBER FORMAT '9999' PROMPT 'Enter number of purchase for each customer (0-9999): '
+
+COL member_id FORMAT 9999 TRUNCATE HEADING "MEMBER ID"
+COL customer_name FORMAT A25 TRUNCATE HEADING "NAME"
+COL member_email FORMAT A35 TRUNCATE HEADING "EMAIL"
+COL member_phone_number FORMAT A15 TRUNCATE HEADING "PHONE NO."
+COL total_payment FORMAT 999990.99 TRUNCATE HEADING "TOTAL PAYMENT"
+COL Quality FORMAT A10 TRUNCATE HEADING "QUALITY"
+
+
+TTITLE CENTER 'Loyal Customer Analysis Report ' _DATE -
+RIGHT 'Page No: ' FORMAT 999 SQL.PNO SKIP 2
+COMPUTE AVG LABEL 'Average : ' OF "total_payment" ON REPORT;
+BREAK ON REPORT;
+
+
+
+
+WITH MemberStats AS (
+    SELECT
+        m.member_id, c.customer_name, m.member_email, m.member_phone_number,
+        COUNT(DISTINCT off.order_form_id) AS num_purchases,
+        SUM(p.payment_amount) AS total_payment
+    FROM
+        Member m
+    JOIN
+        Customer c ON m.member_id = c.member_id
+    JOIN
+        Order_Form off ON c.customer_id = off.customer_id
+    JOIN
+        Payment p ON off.payment_id = p.payment_id
+    WHERE
+        off.order_form_status = 'successful'
+    AND OFF.order_date BETWEEN '&v_startDate' AND '&v_endDate'
+    GROUP BY
+        m.member_id, c.customer_name, m.member_email, m.member_phone_number
+    HAVING
+        COUNT(DISTINCT off.order_form_id) >= &v_numberPurchase
+        AND SUM(p.payment_amount) >= &v_minPayment
+),
+AverageRevenue AS (
+  SELECT
+    AVG(total_payment) AS avg_payment
+  FROM
+    MemberStats
+)
+SELECT
+    ms.member_id,
+    ms.customer_name, 
+    ms.member_email,  
+    ms.member_phone_number,
+    ms.total_payment,
+    CASE 
+    WHEN ms.total_payment > ar.avg_payment THEN 'Above'
+    WHEN ms.total_payment < ar.avg_payment THEN 'Below'
+    ELSE 'Normal'
+END Quality
+FROM
+    MemberStats ms
+CROSS JOIN
+    AverageRevenue ar
+ORDER BY
+    ms.total_payment DESC;
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF

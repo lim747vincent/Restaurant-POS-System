@@ -1,0 +1,38 @@
+SET linesize 200
+SET pagesize 200
+
+ACCEPT v_startDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT v_endDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+
+COLUMN"customer_id"FORMAT 999
+COLUMN"average_order_value"FORMAT 999,999.99
+
+TTITLE CENTER ' Average Customer Order Value Report ' _DATE -
+RIGHT 'Page No: ' FORMAT 999 SQL.PNO SKIP 2
+COMPUTE AVG LABEL 'Average : ' OF "Average Order Value" ON REPORT;
+BREAK ON REPORT;
+
+SELECT
+    c.customer_id,
+    AVG(oi.order_item_quantity * mi.menu_item_unit_price) AS average_order_value
+FROM
+    Order_Form o
+JOIN
+    Customer c ON o.customer_id = c.customer_id
+JOIN
+    Order_Item oi ON o.order_form_id = oi.order_form_id
+JOIN
+    Menu_Item mi ON oi.menu_item_id = mi.menu_item_id
+WHERE
+    o.order_date BETWEEN TO_DATE('&v_startDate', 'DD-MON-YYYY') AND TO_DATE('&v_endDate', 'DD-MON-YYYY')
+GROUP BY
+    c.customer_id
+ORDER BY 
+    c.customer_id;
+    
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF
+

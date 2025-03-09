@@ -1,0 +1,9 @@
+CREATE TABLE Ingredient(
+    ingredient_id NUMBER(4) NOT NULL,
+    ingredient_name VARCHAR(25) NOT NULL UNIQUE,
+    ingredient_price NUMBER(10,2) NOT NULL,
+    ingredient_stock_quantity NUMBER(4) NOT NULL,
+    PRIMARY KEY(ingredient_id),   
+    CONSTRAINT CHK_ingredient_price CHECK (ingredient_price >= 0),
+    CONSTRAINT CHK_ingredient_stock_quantity CHECK (ingredient_stock_quantity >= 0)
+);

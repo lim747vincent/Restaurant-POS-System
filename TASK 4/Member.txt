@@ -1,0 +1,10 @@
+CREATE TABLE Member(
+    member_id NUMBER(4) NOT NULL,
+    member_email VARCHAR(40) NOT NULL UNIQUE,
+    member_phone_number VARCHAR(15) NOT NULL UNIQUE,
+    loyalty_level_id NUMBER(4),
+    member_date_of_birth DATE NOT NULL,
+    PRIMARY KEY(member_id),
+    FOREIGN KEY(loyalty_level_id) REFERENCES Loyalty_Level(loyalty_level_id),
+    CONSTRAINT CHK_member_email CHECK (REGEXP_LIKE(member_email,'^[a-zA-Z]\w+@(\S+)$'))
+);

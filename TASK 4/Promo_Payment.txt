@@ -1,0 +1,8 @@
+CREATE TABLE Promo_Payment(
+    promo_payment_id NUMBER(4) NOT NULL,
+    menu_promotion_campaign_id NUMBER(4) NOT NULL,
+    payment_id NUMBER(4) NOT NULL,
+    PRIMARY KEY(promo_payment_id),
+    FOREIGN KEY(menu_promotion_campaign_id) REFERENCES Menu_Promotion_Campaign(menu_promotion_campaign_id),
+    FOREIGN KEY(payment_id) REFERENCES Payment(payment_id)
+);

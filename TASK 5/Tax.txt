@@ -1,0 +1,10 @@
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0001', 'Service tax', '0.06');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0002', 'Sales tax (1)', '0.10');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0003', 'Sales tax (2)', '0.05');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0004', 'GST', '0.06');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0005', 'SOCSO', '0.01');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0006', 'EPF', '0.12');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0007', 'HRDF', '0.01');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0008', 'DST', '0.06');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0009', 'Corporate income tax', '0.24');
+INSERT INTO Tax (tax_id, tax_name, tax_rate) VALUES ('0010', 'RPGT', '0.30');

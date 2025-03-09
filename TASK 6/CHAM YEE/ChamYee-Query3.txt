@@ -1,0 +1,55 @@
+SET linesize 120
+SET pagesize 40;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+ACCEPT v_startDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT v_endDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+ACCEPT v_minPayment NUMBER FORMAT '9999.99' PROMPT 'Enter min payment per order for each customer (0-9999.99): '
+ACCEPT v_numberPurchase NUMBER FORMAT '9999' PROMPT 'Enter number of purchases for each customer (0-9999): '
+
+COL customer_id FORMAT 9999 TRUNCATE HEADING "CUSTOMER ID"
+COL customer_name FORMAT A35 TRUNCATE HEADING "CUSTOMER NAME"
+COL num_orders FORMAT 9999 TRUNCATE HEADING "Number of Orders"
+COL total_payment FORMAT 999,999.99 TRUNCATE HEADING "Total Sales Amount (RM)"
+
+TTITLE CENTER 'Non-Member Customers Report ' _DATE -
+RIGHT 'Page No: ' FORMAT 999 SQL.PNO SKIP 2
+COMPUTE SUM LABEL 'Total : ' OF "Total Sales Amount (RM)" ON REPORT;
+BREAK ON REPORT;
+
+SELECT
+    C.customer_id AS "CUSTOMER ID",
+    C.customer_name AS "CUSTOMER NAME",
+    COUNT(OFF.order_form_id) AS "Number of Orders",
+    SUM(P.payment_amount) AS "Total Sales Amount (RM)"
+FROM
+    Customer C
+JOIN
+    Order_Form OFF ON C.customer_id = OFF.customer_id
+JOIN
+    Payment P ON OFF.payment_id = P.payment_id
+WHERE
+    OFF.order_form_status = 'successful'
+    AND P.payment_amount > &v_minPayment
+    AND OFF.order_date BETWEEN TO_DATE('&v_startDate', 'DD-MON-YYYY') AND TO_DATE('&v_endDate', 'DD-MON-YYYY')
+    AND C.customer_id IN (
+        SELECT C2.customer_id
+        FROM Customer C2
+        JOIN Order_Form OFF2 ON C2.customer_id = OFF2.customer_id
+        JOIN Payment P2 ON OFF2.payment_id = P2.payment_id
+        WHERE OFF2.order_form_status = 'successful'
+        GROUP BY C2.customer_id
+        HAVING COUNT(*) >= &v_numberPurchase
+    )
+    AND C.member_id IS NULL
+GROUP BY
+    C.customer_id,
+    C.customer_name
+ORDER BY
+    "Number of Orders" DESC;
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF

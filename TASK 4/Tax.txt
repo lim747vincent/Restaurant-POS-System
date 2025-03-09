@@ -1,0 +1,7 @@
+CREATE TABLE Tax(
+    tax_id NUMBER(4) NOT NULL, 
+    tax_name VARCHAR(30) NOT NULL UNIQUE,
+    tax_rate NUMBER(10,2) NOT NULL,
+    PRIMARY KEY(tax_id),
+    CONSTRAINT CHK_tax_rate CHECK (tax_rate >= 0)
+);

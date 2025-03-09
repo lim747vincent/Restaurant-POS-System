@@ -1,0 +1,62 @@
+SET linesize 120
+SET pagesize 35
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+ACCEPT v_startDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter start date (DD-MON-YYYY): '
+ACCEPT v_endDate DATE FORMAT 'DD-MON-YYYY' PROMPT 'Enter end date (DD-MON-YYYY): '
+
+COL company_name FORMAT A20 TRUNCATE HEADING "COMPANY NAME"
+COL revenue FORMAT 99990.90 TRUNCATE HEADING "TOTAL REVENUE (RM)"
+COL avg_revenue FORMAT 99990.99 TRUNCATE HEADING "AVERAGE TOTAL REVENUE (RM)"
+COL PERFORMANCE_RATIO FORMAT 990.90 TRUNCATE HEADING "PERFORMANCE RATIO"
+COL performance FORMAT A30 TRUNCATE HEADING "PERFORMANCE RATIO"
+
+TTITLE CENTER 'Food Delivery Company Performance Report ' _DATE -
+RIGHT 'Page No: ' FORMAT 999 SQL.PNO SKIP 2
+COMPUTE SUM LABEL 'Total : ' OF "revenue" ON REPORT;
+BREAK ON REPORT;
+
+WITH TotalRevenue AS (
+  SELECT
+    FDC.company_name,
+    SUM(MI.menu_item_unit_price * OI.order_item_quantity) AS revenue
+  FROM
+    Order_Form OFM
+    JOIN Food_Delivery_Request FDR ON OFM.order_form_id = FDR.order_form_id
+    JOIN Food_Delivery_Company FDC ON FDR.company_id = FDC.company_id
+    JOIN Order_Item OI ON OFM.order_form_id = OI.order_form_id
+    JOIN Menu_Item MI ON OI.menu_item_id = MI.menu_item_id
+  WHERE
+    OFM.order_form_status = 'successful'
+    AND OFM.consumption_method_id = 2
+    AND OFM.order_date BETWEEN '&v_startDate' AND '&v_endDate'
+  GROUP BY
+    FDC.company_name
+),
+AverageRevenue AS (
+  SELECT
+    AVG(revenue) AS avg_revenue
+  FROM
+    TotalRevenue
+)
+SELECT
+  TR.company_name,
+  TR.revenue,
+  AR.avg_revenue,
+  (TR.revenue / AR.avg_revenue) AS PERFORMANCE_RATIO,
+CASE 
+    WHEN TR.revenue > AR.avg_revenue THEN 'Outperformed'
+    WHEN TR.revenue < AR.avg_revenue THEN 'Below performance'
+    ELSE 'Normal'
+END performance
+FROM
+  TotalRevenue TR
+  CROSS JOIN AverageRevenue AR
+ORDER BY
+  TR.revenue DESC;
+
+CLEAR COLUMNS
+CLEAR BREAKS
+CLEAR COMPUTES
+TTITLE OFF
