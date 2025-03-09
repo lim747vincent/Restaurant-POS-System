@@ -42,6 +42,6 @@ The Restaurant POS System is designed to manage restaurant operations efficientl
 
 ## Author
 
-Developed by **4 Members** on **2022**
+Developed by **4 Members** on **2023**
 
 If you appreciate our work, consider adding this project to your favorites on GitHub. DM me if you’d like to collaborate with us.
