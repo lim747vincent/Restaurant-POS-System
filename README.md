@@ -11,9 +11,11 @@ The Restaurant POS System is designed to manage restaurant operations efficientl
 ### Loyal Member Identification
 - Identifies high-value customers based on their total spending and purchase frequency, allowing targeted promotions.
 
-###Food Delivery Performance
+### Food Delivery Performance
 - Evaluates the efficiency of different food delivery companies using a performance ratio, helping management identify potential partners.
-and many more
+  
+  <br>
+  and many more
 
 ## Technologies:
 - **Database**: Oracle Express for data storage and management
